@@ -21,7 +21,7 @@ t0 = tm()
 num_dice = np.array([])
 chances = np.array([])
 optimum_ratio = np.array([])
-test = 1000
+test = 100
 y=2
 
 while y < test+2:
