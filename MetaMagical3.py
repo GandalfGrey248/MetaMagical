@@ -7,9 +7,9 @@ Created on Tue Jul  7 00:41:27 2020
 from math import factorial as fac
 import numpy as np
 import matplotlib.pyplot as plt
-import winsound
-frequency = 600 # Set Frequency To 2500 Hertz
-duration = 500  # Set Duration To 1000 ms == 1 second
+#import winsound
+#frequency = 600 # Set Frequency To 2500 Hertz
+#duration = 500  # Set Duration To 1000 ms == 1 second
 from time import time as tm
 from scipy.stats import linregress
 
@@ -20,10 +20,9 @@ i=1
 t0 = tm()
 num_dice = np.array([])
 chances = np.array([])
-
-test = 200
+optimum_ratio = np.array([])
+test = 1000
 y=2
-resolution = 10
 
 while y < test+2:
     i=2
@@ -31,7 +30,7 @@ while y < test+2:
     two_winner_chances = np.array([])
     null_winner_chances = np.array([])
     multi_winner_chances = np.array([])
-    while i<(2*y+(1/resolution)):    
+    while i<(2*y)+2:    
         odds = 1-(1/i)
         
         z=1   
@@ -48,7 +47,7 @@ while y < test+2:
         
         
 
-        i = i + (1/resolution)
+        i = i + 1
     
     null_winner_chances = np.append(null_winner_chances, 1-(single_winner_chances + two_winner_chances))
     multi_winner_chances = np.append(multi_winner_chances, (two_winner_chances + single_winner_chances))
@@ -59,8 +58,11 @@ while y < test+2:
     q=0
     while q < size-1:
         if marginal_goalfor_winner_chances[q] == max_marginal_benefit_1:
-            num_dice = np.append(num_dice, (q/resolution)+1)
+            optimum_sides = q+2
+            num_dice = np.append(num_dice, optimum_sides)
             chances = np.append(chances, multi_winner_chances[q])
+            optimum_ratio = np.append(optimum_ratio, (optimum_sides/y))
+            break
         q = q+1
     
     if (y) % ((test)/5) == 0: #rep tracker\n",
@@ -73,12 +75,11 @@ while y < test+2:
 
 print("Done!")
 
-x = np.linspace(2, y+1, test)
-
+x = np.linspace(2, test+2, test, endpoint=False)
 plt.figure(1, dpi=100)
 
-plt.subplot(121)
-plt.plot(x, num_dice, color = 'purple', linewidth = 2, linestyle = '-')
+plt.subplot(131)
+plt.plot(x, num_dice, color = 'purple', linewidth = 2, marker='.', linestyle = 'dashed')
 plt.title("Number of Options Needed per # of Participants")
 plt.xlabel('# of Participants')
 plt.ylabel('# of Options')
@@ -98,8 +99,8 @@ print("Rval: ", rval_1)
 print("Pval: ", pval_1)
 print("Std: ", std_1)
 
-plt.subplot(122)
-plt.plot(x, chances, color = 'purple', linewidth = 2, linestyle = '-')
+plt.subplot(132)
+plt.plot(x, chances, color = 'purple', linewidth = 2, marker = '.', linestyle = 'dashed')
 plt.title("Probability of Achieving 1-2 Winners")
 plt.xlabel('# of Participants')
 plt.ylabel('Probability of 1-2 People Getting Chosen')
@@ -119,10 +120,20 @@ print("Rval: ", rval_2)
 print("Pval: ", pval_2)
 print("Std: ", std_2)
 
+plt.subplot(133)
+plt.plot(x, optimum_ratio, color = 'blue', linewidth = 2, marker = '.', linestyle = 'dashed')
+plt.title("Finding the Optimum Ratio of Options to Participants")
+plt.xlabel('# of Participants')
+plt.ylabel('Optimum Ratio of Options to Participants')
+plt.legend(['Trend'], loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=2) 
+plt.grid()
+
 plt.show()
 
 #%%
-number_testers = input("How many people are there? ")
-number_testers = float(number_testers)
-diceside_needed = round(number_testers*slope_1, 0)
-print("You need a dice with ", diceside_needed, "sides")
+number_testers = input("How many people are there (must be >= 2)? ")
+number_testers = int(number_testers)
+index_ratio_needed = (number_testers-2)
+ratio_needed = optimum_ratio[index_ratio_needed]
+diceside_needed = round(number_testers*ratio_needed, 0)
+print("You need ", diceside_needed, "options")
