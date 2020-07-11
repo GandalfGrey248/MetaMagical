@@ -122,9 +122,5 @@ plt.grid()
 
 plt.show()
 
-number_testers = input("How many people are there (must be >= 2)? ")
-number_testers = int(number_testers)
-index_ratio_needed = (number_testers-2)
-ratio_needed = optimum_ratio[index_ratio_needed]
-diceside_needed = round(number_testers*ratio_needed, 0)
-print("You need ", diceside_needed, "options")
+np.savetxt("Optimum_options_meta3.csv", num_dice, delimiter = ",")
+np.savetxt("Probability_meta3.csv", chances, delimiter = ",")
