@@ -8,14 +8,14 @@ Created on Thu Jul  2 11:48:39 2020
 from math import factorial as fac
 import numpy as np
 import matplotlib.pyplot as plt
-import winsound
-frequency = 750 # Set Frequency To 2500 Hertz
-duration = 1000  # Set Duration To 1000 ms == 1 second
+#import winsound
+#frequency = 750 # Set Frequency To 2500 Hertz
+#duration = 1000  # Set Duration To 1000 ms == 1 second
 from time import time as tm
 
 #%%
 y = input("How many participants are there? ")
-y = float(y)
+y = int(y)
 
 i=1
 t0 = tm()
@@ -23,8 +23,10 @@ single_winner_chances = np.array([])
 no_winner_chances = np.array([])
 two_winner_chances = np.array([])
 multi_winner_chances = np.array([])
+null_winner_chances = np.array([])
+null2_winner_chances = np.array([])
 
-while i<(2*y+1):    
+while i<(y+1):    
     odds = 1-(1/i)
     
     z=1
@@ -42,41 +44,37 @@ while i<(2*y+1):
     no_winner_chance = odds**y
     no_winner_chances = np.append(no_winner_chances, no_winner_chance)
     
-    if (i) % ((2*y)/5) == 0: #rep tracker\n",
+    if (i) % (y/5) == 0: #rep tracker\n",
         t1 = tm() #setting the end time for the rep tracker
         time_elapsed = t1- t0 #calculating difference between beginning and end time of the tracker\n",
         print("Repct:", i, "; Timelap:", time_elapsed, "secs") #printing the results
-        winsound.Beep(frequency, duration)
+        #winsound.Beep(frequency, duration)
         t0 = tm() #resetting the tracker\n",
     i= i+1
-winsound.Beep(frequency, duration)
+#winsound.Beep(frequency, duration)
 print("Done!")        
 
 multi_winner_chances = two_winner_chances + single_winner_chances
 
 marginal_sing_winner_chances = single_winner_chances - no_winner_chances
 max_marginal_benefit_1 = np.max(marginal_sing_winner_chances)
-location_2_1 = np.where(marginal_sing_winner_chances == max_marginal_benefit_1)
+#location_2_1 = np.where(marginal_sing_winner_chances == max_marginal_benefit_1)
 
 marginal_two_winner_chances = two_winner_chances - no_winner_chances
 max_marginal_benefit_2 = np.max(marginal_two_winner_chances)
-location_2_2 = np.where(marginal_two_winner_chances == max_marginal_benefit_2)
+#location_2_2 = np.where(marginal_two_winner_chances == max_marginal_benefit_2)
 
 marginal_multi_winner_chances = multi_winner_chances - no_winner_chances
 max_marginal_benefit_3 = np.max(marginal_multi_winner_chances)
-location_2_3 = np.where(marginal_multi_winner_chances == max_marginal_benefit_3)
-location_2_4 = np.where(multi_winner_chances == np.max(multi_winner_chances))
+#location_2_3 = np.where(marginal_multi_winner_chances == max_marginal_benefit_3)
+#location_2_4 = np.where(multi_winner_chances == np.max(multi_winner_chances))
 
-null_winner_chances = np.array([])
 null_winner_chances = np.append(null_winner_chances, 1-(single_winner_chances + two_winner_chances))
-
-null2_winner_chances = np.array([])
 null2_winner_chances = np.append(null2_winner_chances, 1-(single_winner_chances))
 
 marginal_goalfor_winner_chances = multi_winner_chances - null_winner_chances
 max_marginal_benefit_4 = np.max(marginal_goalfor_winner_chances)
 location_2_5 = np.where(marginal_goalfor_winner_chances == max_marginal_benefit_4)
-
 
 #print(location_2_1)
 #print(location_2_3)
@@ -84,7 +82,7 @@ location_2_5 = np.where(marginal_goalfor_winner_chances == max_marginal_benefit_
 #print(location_2_4)
 #print(location_2_5)
 
-x = np.linspace(0, 2*y, 2*y)
+x = np.linspace(0, y, y)
 plt.figure(dpi=100)
 plt.plot(x, single_winner_chances, color = 'green', linewidth = 2, linestyle = '-')
 #plt.plot(x, no_winner_chances, color = 'red', linewidth = 2, linestyle = '-')
@@ -92,28 +90,25 @@ plt.plot(x, two_winner_chances, color = 'blue', linewidth = 2, linestyle = '-')
 plt.plot(x, multi_winner_chances, color = 'pink', linewidth = 2, linestyle = '-')
 plt.plot(x, null_winner_chances, color = 'purple', linewidth = 2, linestyle = '-')
 plt.plot(x, null2_winner_chances, color = 'orange', linewidth = 2, linestyle = '-')
-#idx = np.argwhere(np.diff(np.sign(null_winner_chances - no_winner_chances))).flatten()
-#plt.plot(x[idx], null_winner_chances[idx], 'ro')
+
 #plt.axvline(x = location_2_1)
 #plt.axvline(x = location_2_2)
 #plt.axvline(x = location_2_3)
 #plt.axvline(x = location_2_4)
 plt.axvline(x = location_2_5)
+
 plt.grid()
-ax = plt.gca()
-ax.spines['right'].set_color('none')
-ax.spines['top'].set_color('none')
-ax.spines['bottom'].set_position(('data', 0))
-ax.spines['left'].set_position(('data', 0))
-plt.xlabel('# Sided Die')
+plt.title("Finding Optimum # of Options for Set # of Participants")
+plt.legend(['One', 'Two', 'One&Two', 'All minus One&Two', 'All minus One'], bbox_to_anchor=(1, 1), ncol=2) 
+plt.xlabel('# of Options')
 plt.ylabel('Probability')
-plt.xlim([0, 2*y])
+plt.xlim([0, y])
 plt.ylim([0, 1])
-plt.legend(['One', 'Two', 'One&Two', 'All - One&Two', 'All - One'], loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=2) 
+
+plt.show()
 
 print(location_2_5)
 
-#%%
 
 
 

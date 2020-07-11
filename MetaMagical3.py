@@ -16,14 +16,17 @@ from scipy.stats import linregress
 
 #%%
 
-i=1
-t0 = tm()
 num_dice = np.array([])
 chances = np.array([])
 optimum_ratio = np.array([])
-test = 100
-y=2
 
+test = input("What is the max # of participants do you expect? ")
+test = int(test)
+
+y=2
+i=1
+
+t0 = tm()
 while y < test+2:
     i=2
     single_winner_chances = np.array([])
@@ -92,7 +95,9 @@ intercept_1 = info_1[1]
 rval_1 = info_1[2]
 pval_1 = info_1[3]
 std_1 = info_1[4] 
- 
+
+print("")
+print("Data for Fig. 1: ")
 print("Slope: ", slope_1)
 print("Intercept: ", intercept_1)
 print("Rval: ", rval_1)
@@ -107,19 +112,6 @@ plt.ylabel('Probability of 1-2 People Getting Chosen')
 plt.legend(['Trend'], loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=2) 
 plt.grid()
 
-info_2 = linregress(x, chances)
-slope_2 = info_2[0]
-intercept_2 = info_2[1]
-rval_2 = info_2[2]
-pval_2 = info_2[3]
-std_2 = info_2[4]  
-
-print("Slope: ", slope_2)
-print("Intercept: ", intercept_2)
-print("Rval: ", rval_2)
-print("Pval: ", pval_2)
-print("Std: ", std_2)
-
 plt.subplot(133)
 plt.plot(x, optimum_ratio, color = 'blue', linewidth = 2, marker = '.', linestyle = 'dashed')
 plt.title("Finding the Optimum Ratio of Options to Participants")
@@ -130,7 +122,6 @@ plt.grid()
 
 plt.show()
 
-#%%
 number_testers = input("How many people are there (must be >= 2)? ")
 number_testers = int(number_testers)
 index_ratio_needed = (number_testers-2)
