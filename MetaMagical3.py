@@ -4,7 +4,7 @@ Created on Tue Jul  7 00:41:27 2020
 
 @author: Edward Elric
 """
-from math import factorial as fac
+from math import comb
 import numpy as np
 import matplotlib.pyplot as plt
 #import winsound
@@ -12,59 +12,56 @@ import matplotlib.pyplot as plt
 #duration = 500  # Set Duration To 1000 ms == 1 second
 from time import time as tm
 from scipy.stats import linregress
-
-
 #%%
 
-num_dice = np.array([])
-chances = np.array([])
-optimum_ratio = np.array([])
-
-test = input("What is the max # of participants do you expect? ")
+test = input("What is the max # of participants that you expect? ")
 test = int(test)
 
+num_dice = np.zeros(test-1)
+chances = np.zeros(test-1)
+optimum_ratio = np.zeros(test-1)
+
 y=2
-i=1
 
 t0 = tm()
-while y < test+2:
+while y <= test:
     i=2
-    single_winner_chances = np.array([])
-    two_winner_chances = np.array([])
-    null_winner_chances = np.array([])
-    multi_winner_chances = np.array([])
-    while i<(2*y)+2:    
+    single_winner_chances = np.zeros(y-i+1)
+    two_winner_chances = np.zeros(y-i+1)
+    null_winner_chances = ([])
+    multi_winner_chances = ([])
+    while i <= y:    
         odds = 1-(1/i)
         
         z=1   
         base_percent = (odds**(y-z))*((1-odds)**(z))
-        combo_factor = fac(y)/((fac(y-z))*fac(z))
+        combo_factor = comb(y, z)
+        #combo_factor = fac(y)/((fac(y-z))*fac(z))
         complex_chance = base_percent * combo_factor
-        single_winner_chances = np.append(single_winner_chances, complex_chance)
+        single_winner_chances[i-2] = complex_chance
         
         z=2
         base_percent = (odds**(y-z))*((1-odds)**(z))
-        combo_factor = fac(y)/((fac(y-z))*fac(z))
+        combo_factor = comb(y, z)
+        #combo_factor = fac(y)/((fac(y-z))*fac(z))
         complex_chance = base_percent * combo_factor
-        two_winner_chances = np.append(two_winner_chances, complex_chance)
-        
-        
+        two_winner_chances[i-2] = complex_chance
 
         i = i + 1
     
     null_winner_chances = np.append(null_winner_chances, 1-(single_winner_chances + two_winner_chances))
     multi_winner_chances = np.append(multi_winner_chances, (two_winner_chances + single_winner_chances))
     marginal_goalfor_winner_chances = multi_winner_chances - null_winner_chances
-    max_marginal_benefit_1 = np.max(marginal_goalfor_winner_chances)
+    max_marginal_benefit = np.max(marginal_goalfor_winner_chances)
     
     size = np.size(marginal_goalfor_winner_chances)
     q=0
-    while q < size-1:
-        if marginal_goalfor_winner_chances[q] == max_marginal_benefit_1:
+    while q < size:
+        if marginal_goalfor_winner_chances[q] == max_marginal_benefit:
             optimum_sides = q+2
-            num_dice = np.append(num_dice, optimum_sides)
-            chances = np.append(chances, multi_winner_chances[q])
-            optimum_ratio = np.append(optimum_ratio, (optimum_sides/y))
+            num_dice[y-2] = optimum_sides
+            chances[y-2] = multi_winner_chances[q]
+            optimum_ratio[y-2] = (optimum_sides/y)
             break
         q = q+1
     
@@ -75,10 +72,9 @@ while y < test+2:
             #winsound.Beep(frequency, duration)
             t0 = tm() #resetting the tracker\n",
     y = y+1
-
 print("Done!")
 
-x = np.linspace(2, test+2, test, endpoint=False)
+x = np.linspace(2, test+1, (test-1), endpoint=False)
 plt.figure(1, dpi=100)
 
 plt.subplot(131)
@@ -124,3 +120,4 @@ plt.show()
 
 np.savetxt("Optimum_options_meta3.csv", num_dice, delimiter = ",")
 np.savetxt("Probability_meta3.csv", chances, delimiter = ",")
+np.savetxt("Optimum_ratio_meta3.csv", optimum_ratio, delimiter = ",")
