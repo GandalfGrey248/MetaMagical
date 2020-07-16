@@ -4,7 +4,7 @@ Created on Thu Jul  2 00:24:21 2020
 
 @author: Edward Elric
 """
-from math import factorial as fac
+from math import comb
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -26,7 +26,8 @@ x = 1
 
 while x < y:
     base_percent = (odds**(y-x))*((1-odds)**(x))
-    combo_factor = fac(y)/((fac(y-x))*fac(x))
+    #combo_factor = fac(y)/((fac(y-x))*fac(x))
+    combo_factor = comb(y, x)
     complex_chance = base_percent * combo_factor
     chances = np.append(chances, complex_chance)
     #print("The probability of ", x, "deaths is", complex_chance)

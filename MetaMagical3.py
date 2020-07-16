@@ -118,6 +118,14 @@ plt.grid()
 
 plt.show()
 
+optimum_ratio_old = np.loadtxt("Optimum_ratio_meta3.csv", delimiter=",")
+size_old = np.size(optimum_ratio_old)
+
+if size_old > np.size(num_dice):
+    print("Old csv file is more advanced. Saving aborted.")
+    exit()
+
 np.savetxt("Optimum_options_meta3.csv", num_dice, delimiter = ",")
 np.savetxt("Probability_meta3.csv", chances, delimiter = ",")
 np.savetxt("Optimum_ratio_meta3.csv", optimum_ratio, delimiter = ",")
+print("Old csv file is less advanced. New data saved!")

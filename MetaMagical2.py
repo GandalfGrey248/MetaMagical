@@ -5,7 +5,7 @@ Created on Thu Jul  2 11:48:39 2020
 @author: Edward Elric
 """
 
-from math import factorial as fac
+from math import comb
 import numpy as np
 import matplotlib.pyplot as plt
 #import winsound
@@ -31,13 +31,15 @@ while i<(y+1):
     
     z=1
     base_percent = (odds**(y-z))*((1-odds)**(z))
-    combo_factor = fac(y)/((fac(y-z))*fac(z))
+    #combo_factor = fac(y)/((fac(y-z))*fac(z))
+    combo_factor = comb(y, z)
     complex_chance = base_percent * combo_factor
     single_winner_chances = np.append(single_winner_chances, complex_chance)
     
     z=2
     base_percent = (odds**(y-z))*((1-odds)**(z))
-    combo_factor = fac(y)/((fac(y-z))*fac(z))
+    #combo_factor = fac(y)/((fac(y-z))*fac(z))
+    combo_factor = comb(y, z)
     complex_chance = base_percent * combo_factor
     two_winner_chances = np.append(two_winner_chances, complex_chance)
     
